@@ -39,7 +39,24 @@ struct ContentView: View {
                     .offset(y: -350)
                 
                 StockListView(stocks: filteredStocks)
-                    .offset(y: 150)
+                    .offset(y: 100)
+                
+                NewsArticleView(
+                    newsArticles: self.stockListViewModel.news,
+                    onDragBegin: { value in
+                        print("온드래그비긴: \(value)")
+                        self.stockListViewModel.dragOffset = value.translation
+                    },
+                    onDragEnd: { value in
+                        print("온드래그엔드: \(value)")
+                        if value.translation.height < 0 {
+                            self.stockListViewModel.dragOffset = CGSize(width: 0, height: 100)
+                        } else {
+                            self.stockListViewModel.dragOffset = CGSize(width: 0, height: 680)
+                        }
+                    }
+                )
+                .offset(y: self.stockListViewModel.dragOffset.height)
             }
             .navigationBarTitle("Stocks")
         }
